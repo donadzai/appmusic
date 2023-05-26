@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 20px;
+    font-family: sans-serif;
+}
+
+#app {
+    height: 100vh;
+    width: 100%;
+    background-image: url(img/ảnh\ nền.gif);
+    image-rendering: pixelated;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 50px;
+    right: 0;
+    left: 0;
+}
+
+.control-group {
+    display: flex;
+    justify-content: space-between;
+    width: 600px;
+    align-items: center;
+}
+
+.box {
+    padding: 20px;
+    border-radius: 50%;
+    background-color: #8de41c;
+    text-align: center;
+}
+
+.box.active.btn-random i{
+    color: #e52165;
+}
+
+.box.active.btn-random:hover i{
+    color: #e52165;
+}
+
+.box.btn-repeat.active i {
+    color: #e52165;
+}
+
+.box.btn-repeat.active:hover i {
+    color: #e52165;
+}
+
+.box:hover {
+    background-color: #fff;
+    box-shadow: 0 0 40px 10px #8de41c;
+    cursor: pointer;
+}
+
+.box:hover .control-icon {
+    color: #8de41c;
+}
+
+.control-icon {
+    font-size: 50px;
+    color: white;
+}
+
+.play-icon {
+    padding: 0 7px;
+}
+
+.pause-icon {
+    display: none;
+}
+
+.playing .play-icon {
+    display: none;
+}
+
+.playing .pause-icon{
+    display: block;
+    padding: 0 7px;
+}
+
+.input-box {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+input {
+    width: 600px;
+}
+
+.song-list {
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    list-style: none;
+    background-color: rgba(15, 12, 12, 0.4);
+    width: 300px;
+    height: 300px;
+    border-radius: 5px;
+    overflow-y: scroll;
+}
+
+.list-item {
+    padding: 10px;
+}
+
+.list-item:hover {
+    background-color: #999;
+    color: #fff;
+    background-color: #8de41c;
+}
+
+.song-img {                                 
+    width: 80px;
+    height: 80px;
+    background: url(img/1.jpg);
+    border-radius: 50%;
+    background-size: cover;
+}
+
+.song-current {
+    min-width: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    left: 30px;
+    top: 360px;
+    background-color: rgba(15, 12, 12, 0.4);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.song-name,.song-singer {
+    margin-left: 15px;
+}

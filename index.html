@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="fonts/fontawesome-free-6.4.0-web/css/all.min.css">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <div id="app">
+
+        <!-- danh sách bài hát -->
+        <ul class="song-list">
+            <li class="list-item">Bài hát 1</li>
+            <li class="list-item">Bài hát 1</li>
+            <li class="list-item">Bài hát 1</li>
+            <li class="list-item">Bài hát 1</li>
+            <li class="list-item">Bài hát 1</li>
+            <li class="list-item">Bài hát 1</li>
+            <li class="list-item">Bài hát 1</li>
+        </ul>
+
+
+        <!-- Bài hát hiện tại -->
+
+        <div class="song-current">
+            <div class="song-img"></div>
+            <div class="song-content">
+                <div class="song-name">Bài hát 1</div>
+                <div class="song-singer">Ca sĩ 1</div>
+            </div>
+        </div>
+
+
+        <div class="control">
+            <div class="control-group">
+                <div class="box btn-repeat">
+                    <i class="control-icon fa-solid fa-rotate-right"></i>
+                </div>
+    
+                <div class="box btn-prev-song">
+                    <i class="control-icon fa-solid fa-backward"></i>
+                </div>
+    
+                <div class="box">
+                    <div class="player">
+                        <div class="btn-play">
+                            <i class="control-icon play-icon fa-solid fa-play"></i>
+                            <i class="control-icon pause-icon fa-solid fa-pause"></i>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="box btn-next-song">
+                    <i class="control-icon fa-solid fa-forward"></i>
+                </div>
+    
+                <div class="box btn-random">
+                    <i class="control-icon fa-solid fa-shuffle"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-box">
+            <input type="range" min="0" max="100" step="1" value="0">
+        </div>
+        <audio class="audio" src=""></audio>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
