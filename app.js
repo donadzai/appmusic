@@ -3,43 +3,43 @@ var data = [
         name: "Tie Me Down",
         singer: "Gryffin, Elley Duhe",
         path: "songs/1. Tie Me Down.mp3",
-        image: "https://cdn.pixabay.com/photo/2014/11/21/03/24/mountains-540115_1280.jpg"
+        image: "img/1.Tie\ Me\ Down.jpg"
     },
     {
         name: "To the Moon",
         singer: "hooligan",
         path: "songs/2. to the moon.mp3",
-        image: "https://cdn.pixabay.com/photo/2018/09/19/23/03/sunset-3689760_1280.jpg"
+        image: "img/2.\ To\ the\ Moon.jpg"
     },
     {
         name: "Talking to the Moon",
         singer: "Bruno Mars",
         path: "songs/3. Talking to the Moon.mp3",
-        image: "https://pixabay.com/vi/photos/beautiful-nature-h%c3%acnh-n%e1%bb%81n-hd-218591/"
+        image: "img/3.\ Talking\ to\ the\ Moon.jpg"
     },
     {
         name: "Shadow Of The Sun",
         singer: "Max Elto",
         path: "songs/4. Shadow-Of-The-Sun.mp3",
-        image: "https://a10.gaanacdn.com/images/song/39/24225939/crop_480x480_1536749130.jpg"
+        image: "img/4.\ Shadow\ Of\ The\ Sun.jpg"
     },
     {
         name: "Love yourself",
         singer: "Justin Bieber",
         path: "songs/5. Love yourself.mp3",
-        image: "https://a10.gaanacdn.com/images/albums/72/3019572/crop_480x480_3019572.jpg"
+        image: "img/5.\ Love\ yourself.jpg"
     },
     {
         name: "Love Is Gone",
         singer: "Dylan Matthew",
         path: "songs/6. Love Is Gone Acoustic.mp3",
-        image: "https://cdn.pixabay.com/photo/2023/05/03/12/45/bird-7967577_960_720.jpg"
+        image: "img/6.\ Love\ Is\ Gone.jpg"
     },
     {
         name: "Double Take",
         singer: "dhruv",
         path: "songs/7. Double Take.mp3",
-        image: "https://a10.gaanacdn.com/gn_img/albums/YoEWlabzXB/oEWlj5gYKz/size_xxl_1586752323.webp"
+        image: "img/7.\ Double\ Take.jpg"
     }
 ]
 
@@ -66,14 +66,15 @@ animateImg.pause();
 var nextBtn = $('.btn-next-song');
 var prevBtn = $('.btn-prev-song');
 var randomBtn = $('.btn-random');
-var repeatBtn = $('.btn-repeat')
+var repeatBtn = $('.btn-repeat');
+var songClick = document.querySelector('.song-list');
 
 
 
 // khởi động ứng dụng
 
 function start() {
-    renderSong(data);
+    renderSong(data,currentIndex);
     loadCurrentSong();
 }
 
@@ -82,10 +83,10 @@ start()
 // Vị trí định nghĩa các hàm
 //1. render ra list song
 
-function renderSong(data) {
-    var result = data.map(function(song) {
+function renderSong(data, currentIndex) {
+    var result = data.map(function(song, index) {
         return `
-            <li class="list-item">${song.name}</li>
+            <li class="list-item ${index === currentIndex ? 'active' : ''}" data-index = "${index}">${song.name}</li>
         `
     })
 
@@ -103,6 +104,8 @@ function currentSongTitle(data) {
 
 // 3. load ra nội dung gồm ảnh, img, name , singer tương ứng.
 function loadCurrentSong() {
+    var url = currentSongTitle(data).image;
+    console.log(url);
     imgSong.style.backgroundImage = `url('${url}')`;
     songName.innerText = currentSongTitle(data).name;
     songSinger.innerText = currentSongTitle(data).singer;
@@ -113,8 +116,10 @@ function loadCurrentSong() {
 // 4. Xử lý next bài tiếp theo
 function nextSong() {
     currentIndex++;
+    renderSong(data, currentIndex)
     if(currentIndex >= data.length) {
-        currentIndex = 0
+        currentIndex = 0;
+        renderSong(data, currentIndex);
     }
     loadCurrentSong()
 }
@@ -123,8 +128,10 @@ function nextSong() {
 // 5. Xử lý prev bài trước đó
 function prevSong() {
     currentIndex = currentIndex-1;
+    renderSong(data, currentIndex);
     if(currentIndex < 0) {
         currentIndex = data.length - 1;
+        renderSong(data, currentIndex);
     }
     loadCurrentSong()
 }
@@ -137,6 +144,7 @@ function randomSong() {
         var newIndex = Math.floor(Math.random() * data.length);
     } while (newIndex === currentIndex) /// nếu newIndex mà = currentIndex thì tiếp tục lặp.
     currentIndex = newIndex; // vẫn thay thế index/ var currentIndex = newIndex => ghi đè
+    renderSong(data, currentIndex);
     loadCurrentSong();
 }
 
@@ -144,6 +152,7 @@ function randomSong() {
 
 function repeatSong() {
     currentIndex;
+    renderSong(data, currentIndex);
     loadCurrentSong();
 }
 
@@ -277,3 +286,12 @@ audio.onended = function() {
     }
 }
 
+// Xử lý sự kiện bấm vào bài trong list thì bài sẽ được chạy
+
+songClick.onclick = function(e) {
+    var result = e.target.getAttribute('data-index');
+    currentIndex = +result;
+    loadCurrentSong();
+    renderSong(data, currentIndex);
+    audio.play();
+}
