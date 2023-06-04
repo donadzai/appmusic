@@ -44,254 +44,220 @@ var data = [
 ]
 
 
+
+// đặt biến
 var $ = document.querySelector.bind(document);
+var $$ = document.querySelectorAll.bind(document);
 
 var listSong = $('.song-list');
-var audio = $('.audio');
-var currentIndex = 0;
-var isPlaying = false;
-var isRandom = false;
-var isRepeat = false;
-var imgSong = $('.song-img');
+var img = $('.song-img');
 var songName = $('.song-name');
-var songSinger = $('.song-singer');
-var url = currentSongTitle(data).image;
+var singerName = $('.song-singer');
 var audio = $('.audio');
-var playBtn = $('.btn-play');
-var player = $('.player');
-var progress = $('input');
-var animateImg = imgSong.animate([{ 'transform': 'rotate(360deg)'}], {duration: 5000, iterations: Infinity,})
-animateImg.pause();
-
+var playBtn = $('.player');
+var songClick = $('.song-list');
 var nextBtn = $('.btn-next-song');
 var prevBtn = $('.btn-prev-song');
 var randomBtn = $('.btn-random');
 var repeatBtn = $('.btn-repeat');
-var songClick = document.querySelector('.song-list');
+var process = $('input');
 
 
 
-// khởi động ứng dụng
+var currentIndex = 0;
+var isPlaying = false;
+var isRandom = false;
+var isRepeat = false;
+var keyframes = [
+    { transform: "rotate(0)" },
+    { transform: "rotate(360deg)" },
+];
+
+var options = {
+    duration: 5000,
+    iterations: Infinity,
+};
+  
+var animate = img.animate(keyframes, options);
+
+animate.pause();
+
+
+
+// viết hàm
+
 
 function start() {
-    renderSong(data,currentIndex);
-    loadCurrentSong();
+    renderSong();
+    loadCurretSong();
 }
 
-start()
-
-// Vị trí định nghĩa các hàm
-//1. render ra list song
-
-function renderSong(data, currentIndex) {
-    var result = data.map(function(song, index) {
+start();
+// 1. render list nhạc
+function renderSong() {
+    var result = data.map(function (element, index) {
         return `
-            <li class="list-item ${index === currentIndex ? 'active' : ''}" data-index = "${index}">${song.name}</li>
+            <li class="list-item ${currentIndex === index ? 'active' : ''}" data-index="${index}">${element.name}</li>      
         `
     })
-
-    var html = result.join('')
-
+    var html = result.join('');
     listSong.innerHTML = html;
 }
 
-//2. lấy giữ liệu của bài hát có index = ...?
-
-function currentSongTitle(data) {
+// 2. llấy ra dữ liệu bài đầu tiên
+function currentSong() {
     return data[currentIndex];
 }
 
-
-// 3. load ra nội dung gồm ảnh, img, name , singer tương ứng.
-function loadCurrentSong() {
-    var url = currentSongTitle(data).image;
-    console.log(url);
-    imgSong.style.backgroundImage = `url('${url}')`;
-    songName.innerText = currentSongTitle(data).name;
-    songSinger.innerText = currentSongTitle(data).singer;
-    audio.src = currentSongTitle(data).path;
+// 3. Load ra bài hiện tại
+function loadCurretSong() {
+    var imgData = currentSong().image;
+    var nameSongData = currentSong().name;
+    var nameSingerData = currentSong().singer;
+    img.style.backgroundImage = `url('${imgData}')`;
+    songName.innerText = `${nameSongData}`;
+    singerName.innerText = `${nameSingerData}`;
+    audio.src = currentSong().path;
 }
 
-
-// 4. Xử lý next bài tiếp theo
-function nextSong() {
-    currentIndex++;
-    renderSong(data, currentIndex)
-    if(currentIndex >= data.length) {
-        currentIndex = 0;
-        renderSong(data, currentIndex);
-    }
-    loadCurrentSong()
-}
-
-
-// 5. Xử lý prev bài trước đó
-function prevSong() {
-    currentIndex = currentIndex-1;
-    renderSong(data, currentIndex);
-    if(currentIndex < 0) {
-        currentIndex = data.length - 1;
-        renderSong(data, currentIndex);
-    }
-    loadCurrentSong()
-}
-
-// 6. Xử lý sự kiện random
-
+// 4. random song
 function randomSong() {
-    var newIndex
-    do{
-        var newIndex = Math.floor(Math.random() * data.length);
-    } while (newIndex === currentIndex) /// nếu newIndex mà = currentIndex thì tiếp tục lặp.
-    currentIndex = newIndex; // vẫn thay thế index/ var currentIndex = newIndex => ghi đè
-    renderSong(data, currentIndex);
-    loadCurrentSong();
+    var newCurrentIndex;
+    do {
+        newCurrentIndex = Math.floor(Math.random() * data.length);
+    }while(newCurrentIndex === currentIndex);
+
+    currentIndex = newCurrentIndex;
+    loadCurretSong();
+    renderSong();
 }
 
-// 7. Xử lý sự kiện repeat
 
-function repeatSong() {
-    currentIndex;
-    renderSong(data, currentIndex);
-    loadCurrentSong();
-}
+// viết events
 
-// Ghi các sự kiện
-
-//1. Sự kiện chạy bài hát và dừng bài hát.
+// 1. Bật tắt bài hát
 playBtn.onclick = function() {
-    audio.play();
     if(isPlaying) {
         audio.pause();
-        animateImg.pause();
-    } else{
+        animate.pause();
+    }else {
         audio.play();
-        animateImg.play();
+        animate.play();
     }
 
-    audio.onplay = function() {
+    audio.onplay =function() {
         isPlaying = true;
-        player.classList.add('playing');
+        playBtn.classList.add('playing');
     }
 
-    audio.onpause = function() {
+    audio.onpause =function() {
         isPlaying = false;
-        player.classList.remove('playing');
+        playBtn.classList.remove('playing');
     }
 }
 
-// 2. Sự kiện tua bài hát
+/// 2. click vào bài nào thì play bài đó.
 
-// Sự kiện thể hiện tiến độ bài hát
-audio.ontimeupdate = function() {
-    if(audio.duration) {
-        var result = Math.floor(audio.currentTime / audio.duration * 100)
-        progress.value = result;
-    }
+songClick.onclick = function(e) {
+    var result = e.target.getAttribute("data-index");
+    currentIndex = +result;
+    loadCurretSong();
+    audio.play();
+    animate.play();
+    playBtn.classList.add('playing');
+    isPlaying = true;
+    renderSong();
 }
 
-// sự kiện cho chức năng tua bài hát
-
-progress.onchange = function() {
-    var newLocation = progress.value / 100 * audio.duration;
-    audio.currentTime = newLocation
-}
-
-// Sự kiện next song
-
+//3. nexxt bài hát tiếp theo
 nextBtn.onclick = function() {
     if(isRandom) {
         randomSong();
-        audio.play();
-    } else if(isRepeat) {
-        repeatSong();
-        audio.play();
-    } else{
-        nextSong();
-        audio.play();
-    }
-    
-    audio.onplay = function() {
+        playBtn.classList.add('playing');
         isPlaying = true;
-        player.classList.add('playing');
-    }
-
-    audio.onpause = function() {
-        isPlaying = false;
-        player.classList.remove('playing');
+        audio.play();
+        animate.play();
+    } else if(isRepeat) {
+        loadCurretSong();
+        audio.play();
+        playBtn.classList.add('playing');
+        isPlaying = true;
+        animate.play();
+    } else {
+        currentIndex++;
+        if(currentIndex > data.length - 1) {
+            currentIndex = 0;
+        }
+        loadCurretSong();
+        renderSong();
+        audio.play();
+        playBtn.classList.add('playing');
+        isPlaying = true;
+        animate.play();
     }
 }
 
-// Sự kiện prev song
-
+//4. prev bài hát phía trước
 prevBtn.onclick = function() {
     if(isRandom) {
-        randomSong()
-        audio.play();
-    }else if(isRepeat) {
-        repeatSong();
-        audio.play();
-    } else{
-        prevSong();
-        audio.play();
-    }
-    
-    audio.onplay = function() {
+        randomSong();
+        playBtn.classList.add('playing');
         isPlaying = true;
-        player.classList.add('playing');
-    }
-
-    audio.onpause = function() {
-        isPlaying = false;
-        player.classList.remove('playing');
+        audio.play();
+        animate.play();
+    } else if(isRepeat) {
+        loadCurretSong();
+        playBtn.classList.add('playing');
+        isPlaying = true;
+        animate.play();
+        audio.play();
+    } else {
+        currentIndex--;
+        if(currentIndex < 0) {
+            currentIndex = data.length - 1;
+        }
+        loadCurretSong();
+        renderSong();
+        audio.play();
+        playBtn.classList.add('playing');
+        isPlaying = true;
+        animate.play();
     }
 }
 
-// Xử lý sự kiện random
-
+//5. random bài hát
 randomBtn.onclick = function() {
     isRandom = !isRandom;
     randomBtn.classList.toggle('active', isRandom);
+    if($('.box.btn-repeat.active')) {
+        $('.box.btn-repeat.active').classList.remove('active');
+    }
 }
 
-// Xử lý sự kiện repeat
-
+//6. repeat bài hát
 repeatBtn.onclick = function() {
     isRepeat = !isRepeat;
     repeatBtn.classList.toggle('active', isRepeat);
+    if($('.box.btn-random.active')) {
+        $('.box.btn-random.active').classList.remove('active')
+    }
 }
 
-// Xử lý khi phát hết bài hát.
+// 7. tua bài hát
+
+audio.ontimeupdate = function() {
+    if(audio.duration) {
+        var result = Math.floor(audio.currentTime / audio.duration * 100);
+        process.value = result;
+    }
+}
 
 audio.onended = function() {
-    if(isRandom) {
-        randomSong();
-        audio.play();
-    } else if(isRepeat) {
-        repeatSong();
-        audio.play();
-    } else{
-        nextSong();
-        audio.play();
-    }
-    
-    audio.onplay = function() {
-        isPlaying = true;
-        player.classList.add('playing');
-    }
-
-    audio.onpause = function() {
-        isPlaying = false;
-        player.classList.remove('playing');
-    }
+    nextBtn.click();
 }
 
-// Xử lý sự kiện bấm vào bài trong list thì bài sẽ được chạy
-
-songClick.onclick = function(e) {
-    var result = e.target.getAttribute('data-index');
-    currentIndex = +result;
-    loadCurrentSong();
-    renderSong(data, currentIndex);
-    audio.play();
+process.onchange = function(e) {
+    var currentPercent =  e.target.value;
+    audio.currentTime = currentPercent / 100 * audio.duration;
 }
+
